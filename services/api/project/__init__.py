@@ -8,7 +8,6 @@ from flask_pymongo import PyMongo
 import sys
 
 
-
 # instantiate the app
 app = Flask(__name__)
 
@@ -26,3 +25,20 @@ def ping_pong():
         'status': 'success',
         'message': 'pong!'
     })
+
+
+@app.route('/user/create', methods=['POST'])
+def requestUser():
+    post_data = request.get_json('user')
+    user = mongo.db.users
+    user.insert({'user': post_data['user']})
+    print(post_data['user'], file=sys.stderr)
+    return jsonify({
+        "user": "sucess"
+    })
+
+
+@app.route("/api/find/<username>", methods=['GET'])
+def user_profile(username):
+    mongo.db.users.find_one_or_404({"user": username})
+    return "Deu certo"
