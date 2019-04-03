@@ -26,3 +26,20 @@ def ping_pong():
         'status': 'success',
         'message': 'pong!'
     })
+
+@app.route("/create/user", methods=['POST'])
+def createUser():
+    user = mongo.db.users
+    post_data = request.get_json()
+    user.insert({'name': post_data['name']})
+    print(post_data['name'], file=sys.stderr)
+    return jsonify({
+        'status': 'user cadastrado!'
+    })
+
+@app.route("/find/<user>", methods=['GET'])
+def findUser(user):
+    mongo.db.users.find_one_or_404({'name': user})
+    return "user encontrado!"
+
+
